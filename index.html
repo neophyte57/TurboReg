@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Turbo Reg</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.3.1/css/foundation.min.css">    
+</head>
+
+<body>
+    <div class="container" id="app">
+        <h1 class="text-center">Turbo Reg says: {{ message }}</h1>
+
+        <h2>Step 1: Tell app what you're interested in.</h2>
+        <button class="button" type="button" data-toggle="facilities-dropdown">Facilities ({{selectedFacilities.length}})</button>
+        <div class="dropdown-pane" id="facilities-dropdown" data-dropdown>
+            <div v-for="fac in facilities">
+                <input type="checkbox" v-bind:id="'fac_' + fac" v-bind:value="fac" v-model="selectedFacilities">
+                <label v-bind:for="'fac_' + fac">{{fac}}</label>
+            </div>
+        </div>
+
+        <button class="button" type="button" data-toggle="startdate-dropdown">Start Date ({{ selectedStartDate }})</button>
+        <div class="dropdown-pane" id="startdate-dropdown" data-dropdown>
+            <date-picker date-format="yy-mm-dd" placeholder-value="2018-12-25" @update-date="updateStartDate"></date-picker>
+            <div>
+                <input type="checkbox" id="includeFutureActivities" v-model="includeFutureActivities">
+                <label for="includeFutureActivities">Also include activities beginning after Start Date</label>    
+            </div>
+        </div>
+
+        <button class="button" type="button" data-toggle="ages-dropdown">Age Ranges ({{selectedAgeRanges.length}})</button>
+        <div class="dropdown-pane" id="ages-dropdown" data-dropdown>
+            <div v-for="age in ageRanges">
+                <input type="checkbox" v-bind:id="'age_' + age" v-bind:value="age" v-model="selectedAgeRanges">
+                <label v-bind:for="'age_' + age">{{age}}</label>
+            </div>
+        </div>
+
+        <button class="button" type="button" data-toggle="activityTypes-dropdown">Activity Types ({{selectedActivityTypes.length}})</button>
+        <div class="dropdown-pane" id="activityTypes-dropdown" data-dropdown>
+            <div v-for="type in activityTypes">
+                <input type="checkbox" v-bind:id="'type_' + type" v-bind:value="type" v-model="selectedActivityTypes">
+                <label v-bind:for="'type_' + type">{{type}}</label>
+            </div>
+        </div>
+
+        <div>Selected Facilities: {{ selectedFacilities }}</div>
+        <div>Selected Date: {{ selectedStartDate }}, {{ includeFutureActivities }}</div>
+        <div>Selected Age Ranges: {{ selectedAgeRanges }}</div>
+        <div>Selected Activity Types: {{ selectedActivityTypes }}</div>
+
+        <h2>Step 2: Click 'Search' and review which Activities match.</h2>
+        <div>
+            <button class="success button" v-on:click="initiatedSearch = true">Search</button>
+        </div>        
+        <h2>Step 3: Click 'Register' or refine search criteria (automatically refreshes matches).</h2>
+
+        <div v-for="activity in results">
+            <template v-if="initiatedSearch && includeResult(activity)">
+                <div class="card">
+                    <div class="card-divider">
+                        {{ activity.course_title }}
+                    </div>
+                    <div class="card-section">
+                        {{ activity.course_description }}
+                    </div>
+                    <div class="card-section">
+                        <span>@ {{ activity.facility }}</span> from <span>{{ activity.start_date }}</span> to <span>{{ activity.end_date }}</span> during <span>{{ activity.start_time }}</span> to <span>{{ activity.end_time }}</span> 
+                    </div>
+                    <div class="card-section">
+                        Age: {{ activity.age }}
+                    </div>
+                    <div class="card-section">
+                        Fees: {{ activity.fee }}
+                    </div>
+                    <div class="card-section">
+                        Course Code: {{ activity.course_id }}
+                    </div>                    
+                    <div class="card-section">
+                        <form action="https://ereg.edmonton.ca/Activities/ActivitiesCourseDetails.asp" method="get" target="_blank">
+                            <input name="aid" type="hidden" v-bind:value="activity.activity_id">
+                            <input name="cid" type="hidden" v-bind:value="activity.course_id">
+                            <input type="submit" class="alert button" value="Register">
+                        </form>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </div>
+
+    </div>
+
+
+    <!-- TODO: development version, includes helpful console warnings -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+    <!-- For data retrieval -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!-- For UI behavior (dropdowns) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.4.3/js/foundation.js"></script>
+
+    <!-- For date picker UI control -->
+    <script
+        src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+        integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+        crossorigin="anonymous"></script>
+
+
+    <script src="app.js"></script>
+</body>
+
+</html>
