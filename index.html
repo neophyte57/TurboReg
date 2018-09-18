@@ -24,7 +24,7 @@
 
         <button class="button" type="button" data-toggle="startdate-dropdown">Start Date ({{ selectedStartDate }})</button>
         <div class="dropdown-pane" id="startdate-dropdown" data-dropdown>
-            <date-picker date-format="yy-mm-dd" placeholder-value="2018-12-25" @update-date="updateStartDate"></date-picker>
+            <date-picker date-format="yy-mm-dd" placeholder-value="2018-12-25" v-bind:initial-value="selectedStartDate" @update-date="updateStartDate"></date-picker>
             <div>
                 <input type="checkbox" id="includeFutureActivities" v-model="includeFutureActivities">
                 <label for="includeFutureActivities">Also include activities beginning after Start Date</label>    
