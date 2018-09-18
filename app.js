@@ -83,6 +83,9 @@ const vm = new Vue({
 
         // Load previous selections 
         if (localStorage.getItem('selectedFacilities')) this.selectedFacilities = JSON.parse(localStorage.getItem('selectedFacilities'));
+        if (localStorage.getItem('selectedStartDate')) this.selectedStartDate = JSON.parse(localStorage.getItem('selectedStartDate'));
+        if (localStorage.getItem('includeFutureActivities')) this.includeFutureActivities = JSON.parse(localStorage.getItem('includeFutureActivities'));
+        
       })
   }, 
   methods: {
@@ -110,15 +113,21 @@ const vm = new Vue({
   watch: {
     selectedFacilities: {
       handler() { 
-        console.log('selectedFacilities changed!'); 
         localStorage.setItem('selectedFacilities', JSON.stringify(this.selectedFacilities));
-      },
-      deep: true
+      }
     },
+    selectedStartDate: {
+      handler() { 
+        localStorage.setItem('selectedStartDate', JSON.stringify(this.selectedStartDate));
+      }
+    },  
     includeFutureActivities: {
       handler() { 
-        console.log('includeFutureActivities changed!'); 
+        localStorage.setItem('includeFutureActivities', JSON.stringify(this.includeFutureActivities));
       }
-    }
+    },
+    // selectedAgeRanges: [],
+    // selectedActivityTypes: [],
+
   }
 });
