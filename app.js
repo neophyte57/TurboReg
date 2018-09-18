@@ -6,6 +6,8 @@
 //
 // Future:
 // - Warning if number registered exceeds capacity
+// - Filter out duplicates in data which have identical course_id and activity_id
+// - User input validation (i.e. start date)
 // 
 // Trying to use doc comments as per https://github.com/Microsoft/tsdoc 
 // 
@@ -41,6 +43,7 @@ Vue.component('date-picker', {
 
 const vm = new Vue({
   el: '#app',
+
   data: {
     results: [],
     // Some static data for testing purposes
@@ -55,6 +58,7 @@ const vm = new Vue({
     selectedActivityTypes: [],
     initiatedSearch: false
   },
+
   mounted() {
 
     // Initialization for Foundation UI behaviors
@@ -98,6 +102,7 @@ const vm = new Vue({
         console.log(error);
       })
   }, 
+
   methods: {
     // @param activityDetails - see sample-data.json for object attributes 
     // @returns true or false 
@@ -113,6 +118,18 @@ const vm = new Vue({
 
         // If there were any selectedAgeRanges, does this activityDetails have a matching age range?
         doInclude = ((this.selectedAgeRanges.length > 0) ? (this.selectedAgeRanges.indexOf(activityDetails.age) != -1) : doInclude);
+      } 
+      if (doInclude) {
+
+        // If start date has been selected, does this activityDetails have a matching start date?
+        // Initial strings must be unambiguous.  
+        var activityStart = new Date(Date.parse(activityDetails.start_date));
+        var selectedStart = new Date(Date.parse(this.selectedStartDate));
+        doInclude = ((this.selectedStartDate !== "") ? (selectedStart.getTime() === activityStart.getTime()) : doInclude);
+        if (includeFutureActivities) {
+
+          doInclude =  activityStart.getTime() >= selectedStart.getTime();
+        }
       } 
       return doInclude;
     },
@@ -134,6 +151,7 @@ const vm = new Vue({
       localStorage.setItem(key, JSON.stringify(value));
     }
   },
+
   watch: {
     selectedFacilities: {
       handler() { 
@@ -159,6 +177,11 @@ const vm = new Vue({
       handler() { 
         this.saveSelection('selectedActivityTypes', this.selectedActivityTypes);
       }
-    }
+    },
+    initiatedSearch: {
+      handler() { 
+        console.log("initiatedSearch changed")
+      }
+    },    
   }
 });
