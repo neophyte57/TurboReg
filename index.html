@@ -7,44 +7,59 @@
     <title>Turbo Reg</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.3.1/css/foundation.min.css">    
+
+    <!-- For "trash" icon -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 </head>
 
 <body>
     <div class="container" id="app">
-        <h1 class="text-center">Turbo Reg says: {{ message }}</h1>
+        <h1 class="text-center">Turbo Reg {{ version }}</h1>
 
         <h2>Step 1: Tell app what you're interested in.</h2>
-        <button class="button" type="button" data-toggle="facilities-dropdown">Facilities ({{selectedFacilities.length}})</button>
-        <div class="dropdown-pane" id="facilities-dropdown" data-dropdown>
+        <button class="button" type="button" data-open="facilities-dropdown">Facilities ({{selectedFacilities.length}})</button>
+        <div class="reveal" id="facilities-dropdown" data-reveal>
             <div v-for="fac in facilities">
                 <input type="checkbox" v-bind:id="'fac_' + fac" v-bind:value="fac" v-model="selectedFacilities">
                 <label v-bind:for="'fac_' + fac">{{fac}}</label>
             </div>
+            <button class="close-button" data-close aria-label="Close reveal" type="button">
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
 
         <button class="button" type="button" data-toggle="startdate-dropdown">Start Date ({{ selectedStartDate }})</button>
-        <div class="dropdown-pane" id="startdate-dropdown" data-dropdown>
-            <date-picker date-format="yy-M-dd" placeholder-value="2018-Dec-25" v-bind:initial-value="selectedStartDate" @update-date="updateStartDate"></date-picker>
+        <div class="reveal" id="startdate-dropdown" data-reveal>
             <div>
-                <input type="checkbox" id="includeFutureActivities" v-model="includeFutureActivities">
-                <label for="includeFutureActivities">Also include activities beginning after Start Date</label>    
+                <input type="checkbox" id="includeActivitiesInFuture" v-model="includeFutureActivities">
+                <label for="includeActivitiesInFuture">Also include activities beginning after Start Date</label>    
             </div>
+            <date-picker date-format="yy-M-dd" placeholder-value="2018-Dec-25" v-bind:initial-value="selectedStartDate" @update-date="updateStartDate"></date-picker>
+            <button class="close-button" data-close aria-label="Close reveal" type="button">
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
 
         <button class="button" type="button" data-toggle="ages-dropdown">Age Ranges ({{selectedAgeRanges.length}})</button>
-        <div class="dropdown-pane" id="ages-dropdown" data-dropdown>
+        <div class="reveal" id="ages-dropdown" data-reveal>
             <div v-for="age in ageRanges">
                 <input type="checkbox" v-bind:id="'age_' + age" v-bind:value="age" v-model="selectedAgeRanges">
                 <label v-bind:for="'age_' + age">{{age}}</label>
             </div>
+            <button class="close-button" data-close aria-label="Close reveal" type="button">
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
 
         <button class="button" type="button" data-toggle="activityTypes-dropdown">Activity Types ({{selectedActivityTypes.length}})</button>
-        <div class="dropdown-pane" id="activityTypes-dropdown" data-dropdown>
+        <div class="reveal" id="activityTypes-dropdown" data-reveal>
             <div v-for="type in activityTypes">
                 <input type="checkbox" v-bind:id="'type_' + type" v-bind:value="type" v-model="selectedActivityTypes">
                 <label v-bind:for="'type_' + type">{{type}}</label>
             </div>
+            <button class="close-button" data-close aria-label="Close reveal" type="button">
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
 
         <div>Selected Facilities: {{ selectedFacilities }}</div>
@@ -99,7 +114,7 @@
 
     <!-- For data retrieval -->
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <!-- For UI behavior (dropdowns) -->
+    <!-- For UI behavior (Reveal) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.4.3/js/foundation.js"></script>
 
