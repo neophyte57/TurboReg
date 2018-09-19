@@ -19,9 +19,10 @@
 
 // Vue component wrapping JQuery's datepicker.
 // See https://vuejsdevelopers.com/2017/05/20/vue-js-safely-jquery-plugin/
+// TODO: Move related JS and CSS references into component 
 //
 Vue.component('date-picker', {
-  template: '<input v-bind:placeholder="placeholderValue" v-bind:value="initialValue" />',
+  template: '<div><input v-bind:placeholder="placeholderValue" v-bind:value="initialValue" /><span v-on:click="$emit(\'update-date\', \'\');"><i class="fas fa-trash-alt"></i></span></div>',
   props: [ 'dateFormat', 'placeholderValue', 'initialValue' ],
   mounted: function() {
 
@@ -47,7 +48,7 @@ const vm = new Vue({
   data: {
     results: [],
     // Some static data for testing purposes
-    message: "Bonjour le monde",
+    version: "0.8",
     facilities: [],
     selectedFacilities: [],
     selectedStartDate: "",
@@ -125,12 +126,26 @@ const vm = new Vue({
         // Initial strings must be unambiguous.  
         var activityStart = new Date(Date.parse(activityDetails.start_date));
         var selectedStart = new Date(Date.parse(this.selectedStartDate));
-        doInclude = ((this.selectedStartDate !== "") ? (selectedStart.getTime() === activityStart.getTime()) : doInclude);
-        if (includeFutureActivities) {
+        if (this.selectedStartDate !== "") {
 
-          doInclude =  activityStart.getTime() >= selectedStart.getTime();
+          doInclude = selectedStart.getTime() === activityStart.getTime();
+          if (this.includeFutureActivities) {
+
+            doInclude =  activityStart.getTime() >= selectedStart.getTime();
+          }
         }
       } 
+      if (doInclude) {
+
+        // If there were any selectedAgeRanges, does this activityDetails have a matching age range?
+        doInclude = ((this.selectedAgeRanges.length > 0) ? (this.selectedAgeRanges.indexOf(activityDetails.age) != -1) : doInclude);
+      } 
+      if (doInclude) {
+
+        // If there were any selectedActivityTypes, does this activityDetails have a matching activity type?
+        doInclude = ((this.selectedActivityTypes.length > 0) ? (this.selectedActivityTypes.indexOf(activityDetails.activity_type) != -1) : doInclude);
+      } 
+
       return doInclude;
     },
     updateStartDate(date) {
