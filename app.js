@@ -48,7 +48,7 @@ const vm = new Vue({
   data: {
     results: [],
     // Some static data for testing purposes
-    version: "0.8",
+    version: "0.8.1",
     facilities: [],
     selectedFacilities: [],
     selectedStartDate: "",
