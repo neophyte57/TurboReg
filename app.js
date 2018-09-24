@@ -48,7 +48,7 @@ const vm = new Vue({
   data: {
     results: [],
     // Some static data for testing purposes
-    version: "0.8.1",
+    version: "0.8.2",
     facilities: [],
     selectedFacilities: [],
     selectedStartDate: "",
@@ -70,6 +70,8 @@ const vm = new Vue({
       .then(response => {
         
         this.results = response.data;
+        // Sort by start date so that closest activities are shown first 
+        this.results = this.results.sort(function(a, b) { return new Date(Date.parse(a.start_date)).getTime() - new Date(Date.parse(b.start_date)).getTime() });
         console.log("Received data at " + new Date());
 
         // Get unique lists

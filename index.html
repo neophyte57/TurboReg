@@ -14,10 +14,11 @@
 
 <body>
     <div class="container" id="app">
-        <h1 class="text-center">Turbo Reg {{ version }}</h1>
+        <h1 class="text-center">Turbo Reg {{ version }}<sup>Beta</sup></h1>
 
         <h2>Step 1: Tell app what you're interested in.</h2>
         <button class="button" type="button" data-open="facilities-dropdown">Facilities ({{selectedFacilities.length}})</button>
+        <!-- TODO: Make this into re-usable component -->
         <div class="reveal" id="facilities-dropdown" data-reveal>
             <div v-for="fac in facilities">
                 <input type="checkbox" v-bind:id="'fac_' + fac" v-bind:value="fac" v-model="selectedFacilities">
@@ -26,6 +27,7 @@
             <button class="close-button" data-close aria-label="Close reveal" type="button">
                 <span aria-hidden="true">&times;</span>
             </button>
+            <button type="button" class="success button" data-close>OK</button>
         </div>
 
         <button class="button" type="button" data-toggle="startdate-dropdown">Start Date ({{ selectedStartDate }})</button>
@@ -38,6 +40,7 @@
             <button class="close-button" data-close aria-label="Close reveal" type="button">
                 <span aria-hidden="true">&times;</span>
             </button>
+            <button type="button" class="success button" data-close>OK</button>
         </div>
 
         <button class="button" type="button" data-toggle="ages-dropdown">Age Ranges ({{selectedAgeRanges.length}})</button>
@@ -49,6 +52,7 @@
             <button class="close-button" data-close aria-label="Close reveal" type="button">
                 <span aria-hidden="true">&times;</span>
             </button>
+            <button type="button" class="success button" data-close>OK</button>
         </div>
 
         <button class="button" type="button" data-toggle="activityTypes-dropdown">Activity Types ({{selectedActivityTypes.length}})</button>
@@ -60,6 +64,7 @@
             <button class="close-button" data-close aria-label="Close reveal" type="button">
                 <span aria-hidden="true">&times;</span>
             </button>
+            <button type="button" class="success button" data-close>OK</button>
         </div>
 
 <!-- For debugging 
@@ -73,7 +78,7 @@
         <div>
             <button class="success button" v-on:click="initiatedSearch = true">Search</button>
         </div>        
-        <h2>Step 3: Click 'Register' or refine search criteria (automatically refreshes matches).</h2>
+        <h2 v-if="initiatedSearch">Step 3: Click 'Register' or refine search criteria (automatically refreshes matches).</h2>
 
         <div v-for="activity in results">
             <template v-if="initiatedSearch && includeResult(activity)">
@@ -85,7 +90,10 @@
                         {{ activity.course_description }}
                     </div>
                     <div class="card-section">
-                        <span>@ {{ activity.facility }}</span> from <span>{{ activity.start_date }}</span> to <span>{{ activity.end_date }}</span> during <span>{{ activity.start_time }}</span> to <span>{{ activity.end_time }}</span> 
+                        <span>@ {{ activity.facility }}</span> 
+                        from <span>{{ activity.start_date }}</span> to <span>{{ activity.end_date }}</span> 
+                        during <span>{{ activity.start_time }}</span> to <span>{{ activity.end_time }}</span> 
+                        on {{ activity.day_of_week }}
                     </div>
                     <div class="card-section">
                         Age: {{ activity.age }}
